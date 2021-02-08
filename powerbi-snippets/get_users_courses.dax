@@ -1,0 +1,62 @@
+// get_users_courses
+// load response from web service.
+// The `Assignment` table then references this and expands as needed.
+let
+    Source = Json.Document(File.Contents("C:\Users\greg\OneDrive\projects\school-stats-powerbi\moodle-responses\01-courses-core_enrol_get_users_courses.json")),
+    courses = Source[courses],
+    #"Converted to Table" = Table.FromList(courses, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "Course"}}),
+    #"Expanded Course" = Table.ExpandRecordColumn(
+        #"Renamed Columns",
+        "Course",
+        {
+            "id",
+            "fullname",
+            "shortname",
+            "timemodified",
+            "assignments"
+        },
+        {
+            "id",
+            "fullname",
+            "shortname",
+            "timemodified",
+            "assignments"
+        }
+    )
+in
+    #"Expanded Course"
+
+
+
+
+
+
+// get_users_courses
+// load response from web service.
+// The `Assignment` table then references this and expands as needed.
+let
+    Source = Json.Document(File.Contents("C:\Users\greg\OneDrive\projects\school-stats-powerbi\moodle-responses\01-courses-core_enrol_get_users_courses.json")),
+    courses = Source[courses],
+    #"Converted to Table" = Table.FromList(courses, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "Course"}}),
+    #"Expanded Course" = Table.ExpandRecordColumn(
+        #"Renamed Columns",
+        "Course",
+        {
+            "id",
+            "fullname",
+            "shortname",
+            "timemodified",
+            "assignments"
+        },
+        {
+            "id",
+            "fullname",
+            "shortname",
+            "timemodified",
+            "assignments"
+        }
+    )
+in
+    #"Expanded Course"

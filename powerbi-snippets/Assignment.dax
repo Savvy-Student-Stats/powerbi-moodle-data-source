@@ -119,3 +119,48 @@ let
     )
 in
     #"Expanded Assignment1"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+
+let
+    Source = get_users_courses,
+    #"Expanded Course" = Table.ExpandRecordColumn(Source, "courses", {"id", "fullname", "shortname", "timemodified", "assignments"}, {"Course.id", "Course.fullname", "Course.shortname", "Course.timemodified", "Course.assignments"}),
+    #"Course assignments1" = #"Expanded Course"[Course.assignments],
+    #"Converted to Table1" = Table.FromList(#"Course assignments1", Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Renamed Columns1" = Table.RenameColumns(#"Converted to Table1",{{"Column1", "Assignment"}}),
+    #"Expanded Assignment" = Table.ExpandListColumn(#"Renamed Columns1", "Assignment"),
+    #"Expanded Assignment1" = Table.ExpandRecordColumn(#"Expanded Assignment", "Assignment", {"id", "cmid", "course", "name", "nosubmissions", "submissiondrafts", "sendnotifications", "sendlatenotifications", "sendstudentnotifications", "duedate", "allowsubmissionsfromdate", "grade", "timemodified", "completionsubmit", "cutoffdate", "gradingduedate", "teamsubmission", "requireallteammemberssubmit", "teamsubmissiongroupingid", "blindmarking", "hidegrader", "revealidentities", "attemptreopenmethod", "maxattempts", "markingworkflow", "markingallocation", "requiresubmissionstatement", "preventsubmissionnotingroup", "submissionstatement", "submissionstatementformat", "configs", "intro", "introformat", "introfiles", "introattachments"}, {"Assignment.id", "Assignment.cmid", "Assignment.course", "Assignment.name", "Assignment.nosubmissions", "Assignment.submissiondrafts", "Assignment.sendnotifications", "Assignment.sendlatenotifications", "Assignment.sendstudentnotifications", "Assignment.duedate", "Assignment.allowsubmissionsfromdate", "Assignment.grade", "Assignment.timemodified", "Assignment.completionsubmit", "Assignment.cutoffdate", "Assignment.gradingduedate", "Assignment.teamsubmission", "Assignment.requireallteammemberssubmit", "Assignment.teamsubmissiongroupingid", "Assignment.blindmarking", "Assignment.hidegrader", "Assignment.revealidentities", "Assignment.attemptreopenmethod", "Assignment.maxattempts", "Assignment.markingworkflow", "Assignment.markingallocation", "Assignment.requiresubmissionstatement", "Assignment.preventsubmissionnotingroup", "Assignment.submissionstatement", "Assignment.submissionstatementformat", "Assignment.configs", "Assignment.intro", "Assignment.introformat", "Assignment.introfiles", "Assignment.introattachments"})
+in
+    #"Expanded Assignment1"

@@ -5,7 +5,7 @@ let
     // #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
     // #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
     // #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Name", type text}, {"Value", type any}}),
-    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Name] = "usergrades")),
+    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "usergrades")),
     #"Expanded gradeitems Value" = Table.ExpandListColumn(#"Filtered Rows", "Value"),
     #"Expanded gradeitems ExpandRecordColumn" = Table.ExpandRecordColumn(
         #"Expanded gradeitems Value",
