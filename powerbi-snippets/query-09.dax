@@ -1,0 +1,38 @@
+let
+	Source = Grade,
+
+	DEFAULT_DATE = DateTime.Date(2019, 1, 1),
+	EPOCH = #datetime(1970, 1, 1, 0, 0, 0),
+
+	TimestampToDate = (timestamp as number) =>
+		if timestamp = 0
+			then DEFAULT_DATE
+			else DateTime.Date(EPOCH + #duration(0, 0, 0, timestamp))
+    ,
+
+	#"Added dateGraded" = Table.AddColumn(Source, "dateGraded", each TimestampToDate([gradedategraded])),
+	#"Added dateSubmitted" = Table.AddColumn(#"Added dateGraded", "dateSubmitted", each TimestampToDate([gradedategraded])),
+	// #"Added dateModified" = Table.AddColumn(#"Added dateSubmitted", "dateModified", each TimestampToDate([gradedategraded])),
+
+	#"Added wasSubmitted" = Table.AddColumn(
+		#"Added dateSubmitted",
+		"wasSubmitted",
+		each if [gradedatesubmitted] = null then false else true
+	),
+
+	#"Changed Type1" = Table.TransformColumnTypes(#"Expanded gradeitems1",{{"graderaw", type number}}),
+
+
+	#"Reorder dateGraded" = Table.ReorderColumns(
+		#"Added dateGraded",
+		List.InsertRange(
+			List.RemoveMatchingItems(
+				Table.ColumnNames(#"Added dateGraded"),
+				{ "dateGraded" }
+			),
+			0,
+			{ "dateGraded" }
+		)
+	)
+in
+    #"Reorder dateGraded"

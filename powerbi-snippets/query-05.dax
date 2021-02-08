@@ -1,0 +1,16 @@
+let
+    AssignmentStats = let
+    Source = Assignment,
+
+    DEFAULT_DATE = #datetime(2019, 1, 1, 0, 0, 0),
+
+    TimestampToDate = (timestamp) =>
+        if [timestamp] = 0
+            then DEFAULT_DATE
+            else #datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [timestamp])
+
+in
+    Source,
+    #"Invoked Custom Function" = Table.AddColumn(AssignmentStats, "dateDue", each TimestampToDate([Assignment.gradingduedate]))
+in
+    #"Invoked Custom Function"

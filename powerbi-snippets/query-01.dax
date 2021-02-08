@@ -1,0 +1,65 @@
+let
+    Source = Folder.Files("C:\Users\greg\OneDrive\projects\school-stats-powerbi\moodle-responses\gradings-by-course"),
+    #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
+    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Name", type text}, {"Value", type any}}),
+    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Name] = "usergrades")),
+    #"Expanded Value" = Table.ExpandListColumn(#"Filtered Rows", "Value"),
+    #"Expanded Value1" = Table.ExpandRecordColumn(#"Expanded Value", "Value", {"courseid", "userid", "userfullname", "maxdepth", "gradeitems"}, {"courseid", "userid", "userfullname", "maxdepth", "gradeitems"}),
+    #"Expanded gradeitems" = Table.ExpandListColumn(#"Expanded Value1", "gradeitems"),
+    #"Expanded gradeitems1" = Table.ExpandRecordColumn(#"Expanded gradeitems", "gradeitems", {"id", "itemname", "itemtype", "itemmodule", "iteminstance", "itemnumber", "categoryid", "outcomeid", "scaleid", "locked", "graderaw", "gradedatesubmitted", "gradedategraded", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}, {"gradeitems.id", "gradeitems.itemname", "gradeitems.itemtype", "gradeitems.itemmodule", "gradeitems.iteminstance", "gradeitems.itemnumber", "gradeitems.categoryid", "gradeitems.outcomeid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.graderaw", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeishidden", "gradeitems.gradeislocked", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "gradeitems.feedbackformat", "gradeitems.cmid"}),
+    #"Removed Columns" = Table.RemoveColumns(#"Expanded gradeitems1",{"Name"}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns",{{"gradeitems.graderaw", type number}}),
+    #"Added dateSubmitted" = Table.AddColumn(
+        #"Changed Type1",
+        "_calc.dateSubmitted",
+        each
+            if [gradeitems.gradedatesubmitted] = "0"
+            then #datetime(2019, 1, 1, 0, 0, 0)
+            else #datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [gradeitems.gradedatesubmitted]),
+            type datetime
+    ),
+    #"Added dateGraded" = Table.AddColumn(
+	    #"Added dateSubmitted",
+        "_calc.dateGraded",
+        each
+            if [gradeitems.gradedategraded] = "0"
+            then #datetime(2019, 1, 1, 0, 0, 0)
+            else #datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [gradeitems.gradedategraded]),
+            type datetime
+    ),
+    #"Added wasSubmitted" = Table.AddColumn(
+        #"Added dateGraded",
+        "_calc.wasSubmitted",
+        each if [gradeitems.gradedatesubmitted] = null then false else true
+    ),
+    #"Reordered Columns" = Table.ReorderColumns(#"Added wasSubmitted",{"_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "Source.Name", "courseid", "userid", "userfullname", "maxdepth", "gradeitems.id", "gradeitems.itemname", "gradeitems.itemtype", "gradeitems.itemmodule", "gradeitems.iteminstance", "gradeitems.itemnumber", "gradeitems.categoryid", "gradeitems.outcomeid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.graderaw", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeishidden", "gradeitems.gradeislocked", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "gradeitems.feedbackformat", "gradeitems.cmid"}),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Reordered Columns",{{"_calc.wasSubmitted", type logical}}),
+    #"Filtered Rows1" = Table.SelectRows(#"Changed Type2", each ([gradeitems.itemtype] = "mod")),
+    #"Removed Columns1" = Table.RemoveColumns(#"Filtered Rows1",{"gradeitems.outcomeid"}),
+    #"Reordered Columns1" = Table.ReorderColumns(#"Removed Columns1",{"gradeitems.graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "Source.Name", "courseid", "userid", "userfullname", "maxdepth", "gradeitems.id", "gradeitems.itemname", "gradeitems.itemtype", "gradeitems.itemmodule", "gradeitems.iteminstance", "gradeitems.itemnumber", "gradeitems.categoryid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeishidden", "gradeitems.gradeislocked", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "gradeitems.feedbackformat", "gradeitems.cmid"}),
+    #"Added Custom" = Table.AddColumn(
+        #"Reordered Columns1",
+        "_calc.isGradeable",
+        each if [gradeitems.gradedategraded] is null and [gradeitems.gradedatesubmitted] is null
+            then false
+            else true
+    ),
+    #"Reordered Columns2" = Table.ReorderColumns(#"Added Custom",{"_calc.isGradeable", "gradeitems.graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "Source.Name", "courseid", "userid", "userfullname", "maxdepth", "gradeitems.id", "gradeitems.itemname", "gradeitems.itemtype", "gradeitems.itemmodule", "gradeitems.iteminstance", "gradeitems.itemnumber", "gradeitems.categoryid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeishidden", "gradeitems.gradeislocked", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "gradeitems.feedbackformat", "gradeitems.cmid"}),
+    #"Filtered Rows2" = Table.SelectRows(#"Reordered Columns2", each ([_calc.isGradeable] = true)),
+    #"Added Custom1" = Table.AddColumn(
+        #"Filtered Rows2", "_calc.submissionStatus",
+        each if [_calc.isGradeable] = null
+            then "Not Gradeable"2
+        else if [gradeitems.gradedategraded] = null
+            then "Not Graded"
+        else if [gradeitems.gradedatesubmitted] = null
+            then "Not Submitted"
+        else  "Submitted"
+    ),
+    #"Reordered Columns3" = Table.ReorderColumns(#"Added Custom1",{"_calc.submissionStatus", "_calc.isGradeable", "gradeitems.graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "Source.Name", "courseid", "userid", "userfullname", "maxdepth", "gradeitems.id", "gradeitems.itemname", "gradeitems.itemtype", "gradeitems.itemmodule", "gradeitems.iteminstance", "gradeitems.itemnumber", "gradeitems.categoryid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeishidden", "gradeitems.gradeislocked", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "gradeitems.feedbackformat", "gradeitems.cmid"})
+in
+    #"Reordered Columns3"

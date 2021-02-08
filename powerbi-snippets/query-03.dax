@@ -1,0 +1,63 @@
+let
+    Source = Assignment
+    // // //
+    // Add isGradeable
+    // @requires `gradedategraded` and `gradedatesubmitted` (but not parsed!)
+    // // //
+    #"Add isGradeable" = Table.AddColumn(
+        Source,
+        "_calc.isGradeable",
+        each if [gradedategraded] is null and [gradedatesubmitted] is null
+            then false
+            else true
+    ),
+    // // //
+    // Filter to only show gradeable
+    // Note: Not sure if this should be filtered or not.
+    // // //
+    // #"Reordered Columns2" = Table.ReorderColumns(#"Added Custom",{"_calc.isGradeable", "graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", , "courseid", "userid", "userfullname", "maxdepth", "id", "itemname", "itemtype", "itemmodule", "iteminstance", "itemnumber", "categoryid", "scaleid", "locked", "gradedatesubmitted", "gradedategraded", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}),
+    #"Filtered isGradeable" = Table.SelectRows(#"Add isGradeable", each ([_calc.isGradeable] = true)),
+
+    // // //
+    // Convert timestamps from Moodle to DateTime
+    // // //
+    #"Added dateSubmitted" = Table.AddColumn(
+        Source,
+        "_calc.dateSubmitted",
+        each
+            if [gradedatesubmitted] = "0"
+            then #datetime(2019, 1, 1, 0, 0, 0)
+            else #datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [gradedatesubmitted]),
+        type datetime
+    ),
+    #"Added dateGraded" = Table.AddColumn(
+	    #"Added dateSubmitted",
+        "_calc.dateGraded",
+        each
+            if [gradedategraded] = "0"
+            then #datetime(2019, 1, 1, 0, 0, 0)
+            else #datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [gradedategraded]),
+        type datetime
+    ),
+    #"Added wasSubmitted" = Table.AddColumn(
+        #"Added dateGraded",
+        "_calc.wasSubmitted",
+        each if [gradedatesubmitted] = null then false else true,
+        type Binary.Type
+    ),
+    // #"Reordered Columns" = Table.ReorderColumns(#"Added wasSubmitted",{"_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", , "courseid", "userid", "userfullname", "maxdepth", "id", "itemname", "itemtype", "itemmodule", "iteminstance", "itemnumber", "categoryid", "outcomeid", "scaleid", "locked", "graderaw", "gradedatesubmitted", "gradedategraded", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Reordered Columns",{{"_calc.wasSubmitted", type logical}}),
+    // #"Reordered Columns1" = Table.ReorderColumns(#"Removed Columns1",{"graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", , "courseid", "userid", "userfullname", "maxdepth", "id", "itemname", "itemtype", "itemmodule", "iteminstance", "itemnumber", "categoryid", "scaleid", "locked", "gradedatesubmitted", "gradedategraded", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}),
+
+    #"Added submissionStatus" = Table.AddColumn(
+        #"Filtered Rows2", "_calc.submissionStatus",
+        each if [_calc.isGradeable] = null
+            then "Not Gradeable"
+        else if [gradedategraded] = null
+            then "Not Graded"
+        else if [gradedatesubmitted] = null
+            then "Not Submitted"
+        else  "Submitted"
+    ),
+in
+    Source

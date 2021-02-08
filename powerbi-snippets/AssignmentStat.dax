@@ -1,0 +1,7 @@
+// AssignmentStat
+let
+    Source = Assignment
+
+    // How do we define function from before?
+in
+    Source

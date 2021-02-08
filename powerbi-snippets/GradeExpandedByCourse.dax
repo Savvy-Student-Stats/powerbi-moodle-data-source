@@ -1,0 +1,16 @@
+let
+    Source = GradeSource,
+    #"Renamed Columns1" = Table.RenameColumns(Source, {"Name", "Source.Name"}),
+
+    // "Transform File" is required to convert the binary content to JSON.
+    // I tried to delete it, big mistake :( sqrl 2021-02-07)
+
+    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Name", type text}, {"Value", type any}}),
+    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Name] = "usergrades")),
+    #"Expanded Value" = Table.ExpandListColumn(#"Filtered Rows", "Value"),
+    #"Expanded Value1 GradeByCourse" = Table.ExpandRecordColumn(#"Expanded Value", "Value", {"courseid", "userid", "userfullname", "maxdepth", "gradeitems"}, {"courseid", "userid", "userfullname", "maxdepth", "gradeitems"}),
+    #"Removed Columns2" = Table.RemoveColumns(#"Expanded Value1 GradeByCourse",{"Source.Name", "Name", "userfullname"})
+in
+    #"Removed Columns2"

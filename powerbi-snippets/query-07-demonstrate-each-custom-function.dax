@@ -1,0 +1,6 @@
+let
+    Source = Assignment,
+    myFunction = (val) => val,
+    #"Added column" = Table.AddColumn(Source, "myCol", each myFunction([Assignment.id]))
+in
+    #"Added column"

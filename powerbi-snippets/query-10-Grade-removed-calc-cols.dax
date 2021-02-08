@@ -1,0 +1,69 @@
+let
+    Source = GradeExpandedByCourse,
+    #"Expanded gradeitems" = Table.ExpandListColumn(Source, "gradeitems"),
+    #"Expanded gradeitems1" = Table.ExpandRecordColumn(
+        #"Expanded gradeitems",
+        "gradeitems",
+        {
+            "id",
+            "itemname",
+            "itemtype",
+            "itemmodule",
+            "iteminstance",
+            "itemnumber",
+            "categoryid",
+            // "outcomeid",
+            "scaleid",
+            "locked",
+            "graderaw",
+            "gradedatesubmitted",
+            "gradedategraded",
+            "gradehiddenbydate",
+            "gradeneedsupdate",
+            "gradeishidden",
+            "gradeislocked",
+            "gradeisoverridden",
+            "gradeformatted",
+            "feedback",
+            "feedbackformat",
+            "cmid"
+        },
+        {
+            "id",
+            "itemname",
+            "itemtype",
+            "itemmodule",
+            "iteminstance",
+            "itemnumber",
+            "categoryid",
+            // "outcomeid",
+            "scaleid",
+            "locked",
+            "graderaw",
+            "gradedatesubmitted",
+            "gradedategraded",
+            "gradehiddenbydate",
+            "gradeneedsupdate",
+            "gradeishidden",
+            "gradeislocked",
+            "gradeisoverridden",
+            "gradeformatted",
+            "feedback",
+            "feedbackformat",
+            "cmid"
+        }
+    ),
+    // #"Removed Colcdumns1" = Table.RemoveColumns(#"Filtered Rows1",{"outcomeid"}),
+    #"Changed Type1" = Table.TransformColumnTypes(
+        #"Expanded gradeitems1",
+        {
+            {"graderaw", type number},
+            {"gradedategraded", Int64.Type}
+        }
+    ),
+    #"Filtered Rows1" = Table.SelectRows(#"Changed Type1", each ([itemtype] = "mod"))
+    // #"Reordered Columns3" = Table.ReorderColumns(#"Filtered Rows2",{"id", "itemname", "itemtype", "gradedatesubmitted", "gradedategraded", "_calc.submissionStatus", "_calc.isGradeable", "graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "courseid", "userid", "maxdepth", "itemmodule", "iteminstance", "itemnumber", "categoryid", "scaleid", "locked", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}),
+    // #"Removed Other Columns" = Table.SelectColumns(#"Reordered Columns3",{"id", "itemname", "itemtype", "gradedatesubmitted", "gradedategraded", "_calc.submissionStatus", "_calc.isGradeable", "graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "courseid", "userid", "maxdepth", "itemmodule", "iteminstance", "itemnumber", "categoryid", "scaleid", "locked", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}),
+    // #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"gradedategraded", Int64.Type}})
+in
+    #"Filtered Rows1"

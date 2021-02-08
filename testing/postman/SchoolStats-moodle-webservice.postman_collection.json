@@ -1,0 +1,642 @@
+{
+	"info": {
+		"_postman_id": "8455585d-c4e6-4fc1-8658-4cfad468879e",
+		"name": "SchoolStats-moodle-webservice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get courses",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "/rest/server.php?moodlewsrestformat=json",
+					"path": [
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/login/token.php?service=moodle_mobile_app&username=greg@stevens.pro&password=x2J7RPMkJm@ixJsBf*W4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login",
+						"token.php"
+					],
+					"query": [
+						{
+							"key": "service",
+							"value": "moodle_mobile_app"
+						},
+						{
+							"key": "username",
+							"value": "greg@stevens.pro"
+						},
+						{
+							"key": "password",
+							"value": "x2J7RPMkJm@ixJsBf*W4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?wsfunction=core_webservice_get_site_info&wstoken={{wstoken}}&moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "wsfunction",
+							"value": "core_webservice_get_site_info"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get courses",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "core_enrol_get_users_courses",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get assignments",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "mod_assign_get_assignments",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "f5c207c1b39335b60b50b69c169bdc0c",
+							"description": "https://thehub.fsd38.ab.ca/user/managetoken.php?",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gradereport_user_get_grade_items ALL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// The opts for the server, also includes the data to be written to file\r",
+							"let opts = {\r",
+							"    requestName: request.name || request.url,\r",
+							"    fileExtension: 'json',\r",
+							"    mode: 'writeFile', // Change this to any function of the fs library of node to use it.\r",
+							"    uniqueIdentifier: 'waddup',\r",
+							"    responseData: pm.response.text(),\r",
+							"    options: {\r",
+							"        encoding: 'binary'\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    url: 'http://localhost:3000/write',\r",
+							"    method: 'POST',\r",
+							"    header: 'Content-Type:binary',\r",
+							"    encoding: 'binary',\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: pm.response.text()\r",
+							"    }\r",
+							"}, function (err, res) {\r",
+							"    console.log(res);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "gradereport_user_get_grade_items",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}",
+							"description": "https://thehub.fsd38.ab.ca/user/managetoken.php?",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "780",
+							"description": "780\n",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "671",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "673",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "684",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "702",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gradereport_user_get_grade_items 671",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "gradereport_user_get_grade_items",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}",
+							"description": "https://thehub.fsd38.ab.ca/user/managetoken.php?",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "{{course_id}}",
+							"description": "702",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gradereport_user_get_grade_items 673",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "gradereport_user_get_grade_items",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}",
+							"description": "https://thehub.fsd38.ab.ca/user/managetoken.php?",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "{{course_id}}",
+							"description": "702",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gradereport_user_get_grade_items 684",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "gradereport_user_get_grade_items",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}",
+							"description": "https://thehub.fsd38.ab.ca/user/managetoken.php?",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "{{course_id}}",
+							"description": "702",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gradereport_user_get_grade_items 702",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "gradereport_user_get_grade_items",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}",
+							"description": "https://thehub.fsd38.ab.ca/user/managetoken.php?",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "{{course_id}}",
+							"description": "702",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get categories",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "gradereport_user_get_grade_items",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "f5c207c1b39335b60b50b69c169bdc0c",
+							"description": "https://thehub.fsd38.ab.ca/user/managetoken.php?",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						},
+						{
+							"key": "courseid",
+							"value": "702",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get courses Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "wsfunction",
+							"value": "core_enrol_get_users_courses",
+							"type": "text"
+						},
+						{
+							"key": "wstoken",
+							"value": "{{wstoken}}",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "{{userid}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/webservice/rest/server.php?moodlewsrestformat=json",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

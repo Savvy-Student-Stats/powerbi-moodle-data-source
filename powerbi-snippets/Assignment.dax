@@ -1,0 +1,121 @@
+// Assignment
+let
+    Source = Json.Document(File.Contents("C:\Users\greg\OneDrive\projects\school-stats-powerbi\moodle-responses\01-courses-core_enrol_get_users_courses.json")),
+    courses = Source[courses],
+    #"Converted to Table" = Table.FromList(courses, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "Course"}}),
+    #"Expanded Course" = Table.ExpandRecordColumn(
+        #"Renamed Columns",
+        "Course",
+        {
+            "id",
+            "fullname",
+            "shortname",
+            "timemodified",
+            "assignments"
+        },
+        {
+            "id",
+            "fullname",
+            "shortname",
+            "timemodified",
+            "assignments"
+        }
+    ),
+    #"Course assignments1" = #"Expanded Course"[assignments],
+    #"Converted to Table1" = Table.FromList(
+        #"Course assignments1",
+        Splitter.SplitByNothing(),
+        null,
+        null,
+        ExtraValues.Error
+    ),
+    #"Renamed Columns1" = Table.RenameColumns(
+        #"Converted to Table1",
+        {
+            {"Column1", "Assignment"}
+        }
+    ),
+    #"Expanded Assignment" = Table.ExpandListColumn(
+        #"Renamed Columns1", "Assignment"
+    ),
+    #"Expanded Assignment1" = Table.ExpandRecordColumn(
+        #"Expanded Assignment",
+        "Assignment",
+        {
+            "id",
+            "cmid",
+            "course",
+            "name",
+            "nosubmissions",
+            "submissiondrafts",
+            "sendnotifications",
+            "sendlatenotifications",
+            "sendstudentnotifications",
+            "duedate",
+            "allowsubmissionsfromdate",
+            "grade",
+            "timemodified",
+            "completionsubmit",
+            "cutoffdate",
+            "gradingduedate",
+            "teamsubmission",
+            "requireallteammemberssubmit",
+            "teamsubmissiongroupingid",
+            "blindmarking",
+            "hidegrader",
+            "revealidentities",
+            "attemptreopenmethod",
+            "maxattempts",
+            "markingworkflow",
+            "markingallocation",
+            "requiresubmissionstatement",
+            "preventsubmissionnotingroup",
+            "submissionstatement",
+            "submissionstatementformat",
+            "configs",
+            "intro",
+            "introformat",
+            "introfiles",
+            "introattachments"
+        },
+        {
+            "id",
+            "cmid",
+            "course",
+            "name",
+            "nosubmissions",
+            "submissiondrafts",
+            "sendnotifications",
+            "sendlatenotifications",
+            "sendstudentnotifications",
+            "duedate",
+            "allowsubmissionsfromdate",
+            "grade",
+            "timemodified",
+            "completionsubmit",
+            "cutoffdate",
+            "gradingduedate",
+            "teamsubmission",
+            "requireallteammemberssubmit",
+            "teamsubmissiongroupingid",
+            "blindmarking",
+            "hidegrader",
+            "revealidentities",
+            "attemptreopenmethod",
+            "maxattempts",
+            "markingworkflow",
+            "markingallocation",
+            "requiresubmissionstatement",
+            "preventsubmissionnotingroup",
+            "submissionstatement",
+            "submissionstatementformat",
+            "configs",
+            "intro",
+            "introformat",
+            "introfiles",
+            "introattachments"
+        }
+    )
+in
+    #"Expanded Assignment1"

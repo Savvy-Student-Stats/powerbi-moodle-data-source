@@ -1,0 +1,7 @@
+// GradeSource
+let
+    Source = Folder.Files("C:\Users\greg\OneDrive\projects\school-stats-powerbi\moodle-responses\02-gradereport_user_get_grade_items"),
+    #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
+    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content]))
+in
+    #"Invoke Custom Function1"
