@@ -1,7 +1,67 @@
 // AssignmentStat
 let
-    Source = Assignment
+    Source = Assignment,
 
+    DEFAULT_DATE = DateTime.Date(2019, 1, 1),
+    EPOCH = DateTime.Date(1970, 1, 1),
+
+    TimestampToDate = (timestamp as number) =>
+        if timestamp = 0
+            then DEFAULT_DATE
+            else DateTime.Date(EPOCH + #duration(0, 0, 0, timestamp))
+    ,
+
+    // convert timestamps
+
+    #"Added aaa_dateGraded" = Table.AddColumn(
+        Source,
+        "aaa_dateGraded",
+        each TimestampToDate([gradedategraded])
+    ),
+    #"Added aaa_duedate" = Table.AddColumn(
+        #"Added aaa_dateGraded",
+        "aaa_duedate",
+        each TimestampToDate([duedate])
+    ),
+    #"Added aaa_allowsubmissionsfromdate" = Table.AddColumn(
+        #"Added aaa_duedate",
+        "aaa_allowsubmissionsfromdate",
+        each TimestampToDate([allowsubmissionsfromdate])
+    ),
+    #"Added aaa_cutoffdate" = Table.AddColumn(
+        #"Added aaa_allowsubmissionsfromdate",
+        "aaa_cutoffdate",
+        each TimestampToDate([cutoffdate])
+    )
+
+    // ,#"Added aaa_gradingduedate" = Table.AddColumn(
+    //     #"Added aaa_cutoffdate",
+    //     gradingduedate,
+    //     each TimestampToDate([gradingduedate])
+    // )
+
+    // #"Changed Type" = Table.TransformColumnTypes(
+	// 	#"Reorder dateGraded",
+	// 	{
+	// 		{"dateGraded", type date}
+	// 	}
+	// )
+
+    //,
+//
+//
+//	//#"Reorder dateGraded" = Table.ReorderColumns(
+//		#"Added aaa_dateGraded",
+//		List.InsertRange(
+//			List.RemoveMatchingItems(
+//				Table.ColumnNames(#"Added dateGraded"),
+//				{ "dateGraded" }
+//			),
+//			0,
+//			{ "dateGraded" }
+//		)
+//	//),
+//
     // How do we define function from before?
 in
-    Source
+     #"Added aaa_cutoffdate"
