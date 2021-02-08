@@ -1,0 +1,6 @@
+#"Changed Type dateDue" = Table.TransformColumnTypes(
+        #"Reorder dateDue",
+        {
+            {"dateDue", type date}
+        }
+    )

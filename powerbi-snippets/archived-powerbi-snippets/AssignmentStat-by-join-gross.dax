@@ -1,7 +1,27 @@
-// Assignment
-let
+// 2021-02-08
+// AssignmentStat
+
+    #"Add dateDue" = Table.AddColumn(
+        #"Expanded Assignment",
+        "dateDue",
+        each TimestampToDate([duedate])
+    ),
+
+
+    let
+
+	DEFAULT_DATE = DateTime.Date(2019, 1, 1),
+	EPOCH = #datetime(1970, 1, 1, 0, 0, 0),
+
+	TimestampToDate = (timestamp as number) =>
+		if timestamp = 0
+			then DEFAULT_DATE
+			else DateTime.Date(EPOCH + #duration(0, 0, 0, timestamp))
+    ,
+
     Source = source_get_users_courses,
-    // expand the `assignments` node from Moodle's JSON response to `get_users_courses`
+
+
     #"Converted to Table" = Table.FromList(Source[assignments], Splitter.SplitByNothing(), null, null, ExtraValues.Error),
     #"Expanded Assignments ExpandListColumn" = Table.ExpandListColumn(#"Converted to Table", "Column1"),
     #"Expanded Assignments ExpandRecordColumn" = Table.ExpandRecordColumn(
@@ -82,9 +102,22 @@ let
             "introfiles",
             "introattachments"
         }
-    )
+    ),
+    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Assignments ExpandRecordColumn",{{"duedate", Int64.Type}, {"allowsubmissionsfromdate", Int64.Type}, {"timemodified", Int64.Type}, {"cutoffdate", Int64.Type}, {"gradingduedate", Int64.Type}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"configs", "submissionstatement", "attemptreopenmethod"}),
+    id1 = #"Removed Columns"[id],
+    #"Converted to Table1" = Table.FromList(id1, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table1",{{"Column1", "Assignment_id"}}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"Assignment_id", Int64.Type}}),
+    #"Merged Queries" = Table.NestedJoin(#"Changed Type1", {"Assignment_id"}, Assignment, {"id"}, "Assignment", JoinKind.FullOuter),
+    #"Expanded Assignment" = Table.ExpandTableColumn(#"Merged Queries", "Assignment", {"course", "name", "duedate", "allowsubmissionsfromdate", "timemodified", "completionsubmit", "cutoffdate", "gradingduedate", "teamsubmission", "intro"}, {"course", "name", "duedate", "allowsubmissionsfromdate", "timemodified", "completionsubmit", "cutoffdate", "gradingduedate", "teamsubmission", "intro"}),
 
-    // Convert Moodle timestamps to real dates (in stat query to keep this clean).
-
+    #"Add dateDue" = Table.AddColumn(
+        #"Expanded Assignment",
+        "dateDue",
+        each TimestampToDate([duedate])
+    ),
+    #"Reordered Columns" = Table.ReorderColumns(#"Add dateDue",{"dateDue", "Assignment_id", "course", "name", "duedate", "allowsubmissionsfromdate", "timemodified", "completionsubmit", "cutoffdate", "gradingduedate", "teamsubmission", "intro"}),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Reordered Columns",{{"dateDue", type date}})
 in
-    #"Expanded Assignments ExpandRecordColumn"
+    #"Changed Type2"

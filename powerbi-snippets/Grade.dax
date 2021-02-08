@@ -1,14 +1,8 @@
-// Grade
 let
-    Source = GradeSource,
-    #"Renamed Columns1" = Table.RenameColumns(Source, {"Name", "Source.Name"}),
-    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
-    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
-    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Name", type text}, {"Value", type any}}),
-    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Name] = "usergrades")),
-    #"Expanded gradeitems Value" = Table.ExpandListColumn(#"Filtered Rows", "Value"),
-    #"Expanded gradeitems ExpandRecordColumn" = Table.ExpandRecordColumn(
-        #"Expanded gradeitems Value",
+    Source = GradeExpandedByCourse,
+    #"Expanded gradeitems" = Table.ExpandListColumn(Source, "gradeitems"),
+    #"Expanded gradeitems1" = Table.ExpandRecordColumn(
+        #"Expanded gradeitems",
         "gradeitems",
         {
             "id",
@@ -59,17 +53,17 @@ let
             "cmid"
         }
     ),
-    #"Filtered Rows" = Table.SelectRows(#"Changed Types", each ([itemtype] = "mod"))
-    #"Changed Types" = Table.TransformColumnTypes(
-        #"Filtered Rows",
+    // #"Removed Colcdumns1" = Table.RemoveColumns(#"Filtered Rows1",{"outcomeid"}),
+    #"Changed Type1" = Table.TransformColumnTypes(
+        #"Expanded gradeitems1",
         {
             {"graderaw", type number},
             {"gradedategraded", Int64.Type}
         }
-    )
-
+    ),
+    #"Filtered Rows1" = Table.SelectRows(#"Changed Type1", each ([itemtype] = "mod"))
     // #"Reordered Columns3" = Table.ReorderColumns(#"Filtered Rows2",{"id", "itemname", "itemtype", "gradedatesubmitted", "gradedategraded", "_calc.submissionStatus", "_calc.isGradeable", "graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "courseid", "userid", "maxdepth", "itemmodule", "iteminstance", "itemnumber", "categoryid", "scaleid", "locked", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}),
     // #"Removed Other Columns" = Table.SelectColumns(#"Reordered Columns3",{"id", "itemname", "itemtype", "gradedatesubmitted", "gradedategraded", "_calc.submissionStatus", "_calc.isGradeable", "graderaw", "_calc.dateGraded", "_calc.dateSubmitted", "_calc.wasSubmitted", "courseid", "userid", "maxdepth", "itemmodule", "iteminstance", "itemnumber", "categoryid", "scaleid", "locked", "gradehiddenbydate", "gradeneedsupdate", "gradeishidden", "gradeislocked", "gradeisoverridden", "gradeformatted", "feedback", "feedbackformat", "cmid"}),
     // #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"gradedategraded", Int64.Type}})
 in
-    #"Changed Types"
+    #"Filtered Rows1"

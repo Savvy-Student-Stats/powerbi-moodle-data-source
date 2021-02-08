@@ -1,9 +1,15 @@
 // AssignmentStat
+// using reference (`Source = Assignment`) b/c a join was grossly complicated, thus slow, looking.
+// 100+ lines of code down to 7 this way.
+// @since 2021-02-08
+//
+// Converting dates here instead of on Assignment query, but that may change.
+// maybe rename that AssignmentSource and then this becomes Assignment or StatsAssignment?
+
 let
-    Source = Assignment,
 
     DEFAULT_DATE = DateTime.Date(2019, 1, 1),
-    EPOCH = DateTime.Date(1970, 1, 1),
+    EPOCH = #datetime(1970, 1, 1, 0, 0, 0),
 
     TimestampToDate = (timestamp as number) =>
         if timestamp = 0
@@ -11,64 +17,64 @@ let
             else DateTime.Date(EPOCH + #duration(0, 0, 0, timestamp))
     ,
 
-    // convert timestamps
+    // thanks https://stackoverflow.com/a/38275848/269078
+    ConvertTimestampColumns = (table, colNames as list) =>
+        List.Accumulate(
+            colNames,
+            table,
+            (state, current) =>
+                Table.AddColumn(
+                    state,
+                    current & "_asDate",
+                    each TimestampToDate(table[current]),
+                    type date
+                )
+        )
+    // end function
+    ,
+    //
+    Source = Assignment,
 
-    // #"Added aaa_dateGraded" = Table.AddColumn(
-    //     Source,
-    //     "aaa_dateGraded",
-    //     each
-    //         if Table.hasColumn(
-    //             Source,
-    //             { "gradedategraded" }
-    //         ) then TimestampToDate([gradedategraded])
-    //         else DEFAULT_DATE
-    // ),
-    #"Added aaa_dateGraded" = Source,
-    #"Added aaa_duedate" = Table.AddColumn(
+
+    // Convert Moodle timestamps to date
+    #"Converted Timestamps" = ConvertTimestampColumns(
         Source,
-        "aaa_duedate",
-        each TimestampToDate([duedate])
-    ),
-    #"Added aaa_allowsubmissionsfromdate" = Table.AddColumn(
-        #"Added aaa_duedate",
-        "aaa_allowsubmissionsfromdate",
-        each TimestampToDate([allowsubmissionsfromdate])
-    ),
-    #"Added aaa_cutoffdate" = Table.AddColumn(
-        #"Added aaa_allowsubmissionsfromdate",
-        "aaa_cutoffdate",
-        each TimestampToDate([cutoffdate])
-    ),
-    #"Added dateGraded" = Table.AddColumn(Source, "dateGraded", each TimestampToDate([cutoffdate])),
+        {
+            "duedate",
+            "allowsubmissionsfromdate",
+            "timemodified",
+            "gradingduedate"
+        }
+    )
 
-    // ,#"Added aaa_gradingduedate" = Table.AddColumn(
-    //     #"Added aaa_cutoffdate",
-    //     gradingduedate,
-    //     each TimestampToDate([gradingduedate])
+    // #"Added dateDue" = Table.AddColumn(
+        // Source,
+        // "dateDue",
+        // each TimestampToDate([duedate]),
+        // type date
+    // ),
+
+
+    // #"Changed Type dateDue" = Table.TransformColumnTypes(
+    //     #"Reorder dateDue",
+    //     {
+    //         {"dateDue", type date}
+    //     }
+    // ),
+
+    // #"Reorder dateDue" = Table.ReorderColumns(
+    //     #"Convert Timestamps",
+
+    //     // Dynamically move column to beginning
+    //     List.InsertRange(
+    //         List.RemoveMatchingItems(
+    //             Table.ColumnNames(#"Added dateDue"),
+    //             { "dateDue" }
+    //         ),
+    //         0,
+    //         { "dateDue" }
+    //     )
     // )
 
-    // #"Changed Type" = Table.TransformColumnTypes(
-    // 	#"Reorder dateGraded",
-    // 	{
-    // 		{"dateGraded", type date}
-    // 	}
-    // )
-
-    //,
-//
-//
-//	//#"Reorder dateGraded" = Table.ReorderColumns(
-//		#"Added aaa_dateGraded",
-//		List.InsertRange(
-//			List.RemoveMatchingItems(
-//				Table.ColumnNames(#"Added dateGraded"),
-//				{ "dateGraded" }
-//			),
-//			0,
-//			{ "dateGraded" }
-//		)
-//	//),
-//
-    // How do we define function from before?
 in
-     #"Added aaa_cutoffdate"
+    #"Converted Timestamps"
