@@ -24,6 +24,11 @@ let
 			{ "dateGraded" }
 		)
 	),
-    #"Changed Type" = Table.TransformColumnTypes(#"Reorder dateGraded",{{"dateGraded", type date}})
+    #"Changed Type" = Table.TransformColumnTypes(
+		#"Reorder dateGraded",
+		{
+			{"dateGraded", type date}
+		}
+	)
 in
     #"Changed Type"

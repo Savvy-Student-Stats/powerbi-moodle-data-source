@@ -13,13 +13,19 @@ let
 
     // convert timestamps
 
-    #"Added aaa_dateGraded" = Table.AddColumn(
-        Source,
-        "aaa_dateGraded",
-        each TimestampToDate([gradedategraded])
-    ),
+    // #"Added aaa_dateGraded" = Table.AddColumn(
+    //     Source,
+    //     "aaa_dateGraded",
+    //     each
+    //         if Table.hasColumn(
+    //             Source,
+    //             { "gradedategraded" }
+    //         ) then TimestampToDate([gradedategraded])
+    //         else DEFAULT_DATE
+    // ),
+    #"Added aaa_dateGraded" = Source,
     #"Added aaa_duedate" = Table.AddColumn(
-        #"Added aaa_dateGraded",
+        Source,
         "aaa_duedate",
         each TimestampToDate([duedate])
     ),
@@ -32,7 +38,8 @@ let
         #"Added aaa_allowsubmissionsfromdate",
         "aaa_cutoffdate",
         each TimestampToDate([cutoffdate])
-    )
+    ),
+    #"Added dateGraded" = Table.AddColumn(Source, "dateGraded", each TimestampToDate([cutoffdate])),
 
     // ,#"Added aaa_gradingduedate" = Table.AddColumn(
     //     #"Added aaa_cutoffdate",
@@ -41,11 +48,11 @@ let
     // )
 
     // #"Changed Type" = Table.TransformColumnTypes(
-	// 	#"Reorder dateGraded",
-	// 	{
-	// 		{"dateGraded", type date}
-	// 	}
-	// )
+    // 	#"Reorder dateGraded",
+    // 	{
+    // 		{"dateGraded", type date}
+    // 	}
+    // )
 
     //,
 //

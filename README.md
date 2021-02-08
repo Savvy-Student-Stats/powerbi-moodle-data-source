@@ -4,21 +4,18 @@
 <summary>Contents</summary>
 
 ## Contents
+
 - [Awesome School Stats :sunglasses: (`school-stats-powerbi`)](#awesome-school-stats-sunglasses-school-stats-powerbi)
   - [Contents](#contents)
-- [Intro](#intro)
-- [History](#history)
-  - [TL;DR (somewhat)](#tldr-somewhat)
+  - [Intro](#intro)
+  - [History](#history)
+    - [TL;DR (somewhat)](#tldr-somewhat)
   - [More History](#more-history)
-- [Authors](#authors)
+
 </details>
 
 ----
-# Intro
-
-
-
-
+## Intro
 
 Using the Moodle web service, this package extracts Course and Grade info to feed into Power BI for pretty reports and AI insights!
 
@@ -27,14 +24,12 @@ Since my son's education is the most important thing, after managing Type-1 Diab
 It is learning how to learn, developing productive habits, and handling feedback.
 It determines the future.
 
->  "Knowledge is power"
->--- *Sir Francis Bacon (or Thomas Jefferson, apparently there's flame wars)*
+> "Knowledge is power"
+> --- *Sir Francis Bacon (or Thomas Jefferson, apparently there's flame wars)*
 
+## History
 
-
-# History
-
-## TL;DR (somewhat)
+### TL;DR (somewhat)
 
 This started as a summary but turned into the full description. Hope it's useful.
 
@@ -73,10 +68,6 @@ The problems I found were:
          1. Is "subject" a local term? I'm from Calgary, Alberta, Canada 🍁.
    5. Final nail in the coffin was that I couldn't extract any date for assignments. 
       1. No idea what was sold and new.
-
-
-
-- [ ] Add Cypress tests to repo.
 
 
 
@@ -121,9 +112,8 @@ There were numerous benefis to online scool, including:
 
 TODO: Finish
 
-# Authors
-- Dad - sqrl
-  - (@sqrl-ca)
-- Son/Student
-  - 
+---
 
+*Made with :heart: by [sqrl (Dad)](https://twitter.com/gregdevelops) and [Bobthebe3t (Son)](http://www.bobisagamer.com/)*
+
+---
