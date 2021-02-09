@@ -1,7 +1,6 @@
 // Assignment
 let
     Source = source_get_users_courses,
-    // expand the `assignments` node from Moodle's JSON response to `get_users_courses`
     #"Converted to Table" = Table.FromList(Source[assignments], Splitter.SplitByNothing(), null, null, ExtraValues.Error),
     #"Expanded Assignments ExpandListColumn" = Table.ExpandListColumn(#"Converted to Table", "Column1"),
     #"Expanded Assignments ExpandRecordColumn" = Table.ExpandRecordColumn(
@@ -82,9 +81,8 @@ let
             "introfiles",
             "introattachments"
         }
-    )
-
-    // Convert Moodle timestamps to real dates (in stat query to keep this clean).
-
+    ),
+    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Assignments ExpandRecordColumn",{{"duedate", Int64.Type}, {"allowsubmissionsfromdate", Int64.Type}, {"timemodified", Int64.Type}, {"cutoffdate", Int64.Type}, {"gradingduedate", Int64.Type}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"configs", "submissionstatement", "attemptreopenmethod"})
 in
-    #"Expanded Assignments ExpandRecordColumn"
+    #"Removed Columns"
