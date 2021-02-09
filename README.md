@@ -8,6 +8,7 @@
 - [Awesome School Stats :sunglasses: (`school-stats-powerbi`)](#awesome-school-stats-sunglasses-school-stats-powerbi)
   - [Contents](#contents)
   - [Intro](#intro)
+  - [HOWTO Obtain Security Key for Moodle](#howto-obtain-security-key-for-moodle)
   - [History](#history)
     - [TL;DR (somewhat)](#tldr-somewhat)
   - [More History](#more-history)
@@ -21,11 +22,36 @@ Using the Moodle web service, this package extracts Course and Grade info to fee
 
 Hope it helps someone. If not, I at least have a copy of the repo for my own purposes. 
 Since my son's education is the most important thing, after managing Type-1 Diabetes, is school.
-It is learning how to learn, developing productive habits, and handling feedback.
+It is learning how to learn, develop ing productive habits, and handling feedback.
 It determines the future.
 
 > "Knowledge is power"
 > --- *Sir Francis Bacon (or Thomas Jefferson, apparently there's flame wars)*
+
+---
+
+## HOWTO Obtain Security Key for Moodle
+
+1. Login to `Moodle` as the Student.
+2. Click the name/avatar at the top right.
+3. Click `Preferences`.
+4. Click `Security keys`.
+5. Should end up on a URL ending 
+   with something like 
+   `/user/managetoken.php?sesskey=YOUR_SESSION_ID_THAT_DOES_NOT_MATTER`.
+
+
+
+
+
+![image-20210209142237794](README.assets/image-20210209142237794.png)
+
+![image-20210209143111955](README.assets/image-20210209143111955.png)
+
+
+
+---
+
 
 ## History
 
@@ -114,6 +140,6 @@ TODO: Finish
 
 ---
 
-*Made with :heart: by [sqrl (Dad)](https://twitter.com/gregdevelops) and [Bobthebe3t (Son)](http://www.bobisagamer.com/)*
+*Made with :heart: by [sqrl (Dad)](https://twitter.com/gregdevelops) and [Bobthebe3t (Child/Student)](http://www.bobisagamer.com/)*.
 
 ---
