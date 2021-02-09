@@ -25,7 +25,7 @@ let
             sourceTable,
             (state, colName) =>
                 Table.AddColumn(
-                    sourceTable,
+                    state,
                     colName & "_asDate",
                     // "you can use the underscore „_“ to reference the current row of the table, which means the current record."
                     each TimestampToDate(Record.Field(_, colName)),
