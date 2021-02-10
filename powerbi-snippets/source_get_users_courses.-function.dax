@@ -1,0 +1,43 @@
+// source_get_users_courses
+// load response from web service.
+// The `Assignment` table then references this and expands as needed.
+let
+    //&wsfunction=core_enrol_get_users_courses
+
+    RemoteData = AskMoodleFor("core_enrol_get_users_courses", "10335"),
+
+
+    #"Renamed Columns" = Table.RenameColumns(
+        RemoteData, {
+            {"Column1", "courses"}
+        }
+    ),
+    #"Expanded courses" = Table.ExpandRecordColumn(
+        #"Renamed Columns",
+        "courses",
+        {"id", "fullname", "shortname", "timemodified", "assignments"},
+        {"id", "fullname", "shortname", "timemodified", "assignments"}
+    )
+    // Courses = #"Expanded courses"[courses]
+in
+    // Courses
+    #"Expanded courses"
+
+
+// 2021-02-10: Could not get WS working with posting form dataq.
+// After playing with postman, and reading https://moodle.org/plugins/webservice_restjson
+// I discovered any param can be sent through the URL params.
+// Kind of gross passing in an API key in a loggable way, but oh well.
+
+// body = Json.Document("{
+    // ""wsfunction"": ""core_enrol_get_users_course"",
+    // ""wstoken"": """ & MOODLE_KEY & """,
+    // ""userid"": """ & MOODLE_USER_ID & """"
+// & "}"),
+//
+// bodyQueryString = Uri.BuildQueryString(body),
+// body =
+//     "wsfunction=core_enrol_get_users_course"
+//     & "&wstoken=" & MOODLE_KEY
+//     & "&userid=" & MOODLE_USER_ID
+// ,
