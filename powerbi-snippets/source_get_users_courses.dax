@@ -2,10 +2,51 @@
 // load response from web service.
 // The `Assignment` table then references this and expands as needed.
 let
-    Source = Json.Document(File.Contents(CONF_MOODLE_DIR & "01-courses-core_enrol_get_users_courses.json")),
-    courses = Source[courses],
-    #"Converted to Table" = Table.FromList(courses, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
-    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "courses"}}),
-    #"Expanded courses" = Table.ExpandRecordColumn(#"Renamed Columns", "courses", {"id", "fullname", "shortname", "timemodified", "assignments"}, {"id", "fullname", "shortname", "timemodified", "assignments"})
+    // CHANGE THESE
+    MOODLE_SECURITY_KEY = "f5c207c1b39335b60b50b69c169bdc0c",
+    MOODLE_USER_ID = "10335",
+    MOODLE_BASE_URL = "https://thehub.fsd38.ab.ca/",
+    // STOP CHANGING THINGS
+
+
+    // Source = Json.Document(File.Contents(CONF_MOODLE_DIR & "01-courses-core_enrol_get_users_courses.json")),
+
+    // MOODLE OVERVIEW
+    // No special HTTP headers required.
+    // Requests run through HTTP POSTs.
+    MOODLE_SVC_URL = MOODLE_BASE_URL & "/webservice/rest/server.php?moodlewsrestformat=json",
+
+// wsfunction=core_enrol_get_users_courses&wstoken=f5c207c1b39335b60b50b69c169bdc0c&moodlewsrestformat=json&userid=10335
+
+    // Add secuirty key to request body (form-data)
+    // wsfunction:core_enrol_get_users_courses&wstoken:{{wstoken}}&moodlewsrestformat:json&userid:{{userid}}
+
+
+    // :+1: https://community.powerbi.com/t5/Desktop/How-to-add-body-into-Web-Contents/m-p/128996
+
+    Source = Json.Document(
+        Web.Contents(
+            MOODLE_SVC_URL,
+            [
+                // ApiKeyName="wstoken",
+                // Headers=[Authorization=vToken],
+                Content=Text.ToBinary(
+                    "wsfunction=core_enrol_get_users_courses&wstoken="
+                    & MOODLE_SECURITY_KEY
+                    & "&moodlewsrestformat=json&userid="
+                    & MOODLE_USER_ID
+                )
+            ]
+        )
+    ),
+
+    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Renamed Columns" = Table.RenameColumns(
+        #"Converted to Table",{
+        {"Column1", "courses"}}
+    ),
+    #"Expanded courses" = Table.ExpandRecordColumn(#"Renamed Columns", "courses", {"id", "fullname", "shortname", "timemodified", "assignments"}, {"id", "fullname", "shortname", "timemodified", "assignments"}
+    ),
+    courses = #"Expanded courses"[courses]
 in
     #"Expanded courses"
