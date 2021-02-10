@@ -1,0 +1,22 @@
+
+// https://community.powerbi.com/t5/Power-Query/Examples-of-WebMethod-Post/td-p/185551
+
+let
+
+    url = "https://api.powerbi.com/beta/72f988bf-86f1-41af-91ab-2d7cd011db47/datasets/29f1e104-5e56-4247-8712-8f109102109f/rows?key=cZs8uA30GFpBHTi8bCSEbt2RK6fZn3QuZDnp6pgsyk1JofKe49WjSXxbBiMlqb1NXjkCb5sSHeNS52GFIxbCnA%3D%3D",
+    body = "
+[
+{
+""VALUE"" :198.6
+}
+]
+",
+    Source = Web.Contents(
+        url,
+        [
+            Headers = [#"Content-Type"="application/json"],
+            Content = Text.ToBinary(body)
+        ]
+    )
+in
+    Source

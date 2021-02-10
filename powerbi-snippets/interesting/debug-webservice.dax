@@ -1,0 +1,13 @@
+// https://community.powerbi.com/t5/Desktop/How-to-add-body-into-Web-Contents/m-p/128996
+
+let
+Source = Json.Document("[
+{
+   ""method"": ""get"",
+   ""params"": {
+      ""SelectionCriteria"": {},
+      ""FieldNames"": [""Id"", ""Name""]
+   }
+}]")
+in
+    Source

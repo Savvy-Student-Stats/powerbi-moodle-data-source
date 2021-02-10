@@ -27,16 +27,18 @@ let
     Source = Json.Document(
         Web.Contents(
             MOODLE_SVC_URL,
-            [
+            {
                 // ApiKeyName="wstoken",
-                // Headers=[Authorization=vToken],
+                Headers =[
+                    #"Content-type"="text/json"
+                ],
                 Content=Text.ToBinary(
                     "wsfunction=core_enrol_get_users_courses&wstoken="
                     & MOODLE_SECURITY_KEY
                     & "&moodlewsrestformat=json&userid="
                     & MOODLE_USER_ID
                 )
-            ]
+            }
         )
     ),
 
