@@ -5,3 +5,32 @@ let
     #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content]))
 in
     #"Invoke Custom Function1"
+
+
+
+
+--- LOOPY WAY
+
+// source_gradereport_user_get_grade_items.dax
+// @since 2021-02-10
+
+let
+    Source = #"Source-get_users_courses",
+    #"Removed Other Columns" = Table.SelectColumns(Source,{"Course.id", "Course.shortname"}),
+
+    RemoteData = AskMoodleFor(
+        "gradereport_user_get_grade_items",
+        "userid=" & MOODLE_USER_ID
+        & "&courseid=" [Course.id]
+    ),
+    #"Invoked Custom Function" = Table.AddColumn(
+        #"Removed Other Columns", "GradeReport",
+        each AskMoodleFor(
+            "gradereport_user_get_grade_items",
+            "userid=" & CONFIG_MOODLE_USER_ID
+            & "&courseid=" & Number.ToText([Course.id])
+        )
+    ),
+    GradeReport = #"Invoked Custom Function"{0}[GradeReport]
+in
+    GradeReport

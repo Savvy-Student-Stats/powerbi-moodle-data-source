@@ -4,24 +4,70 @@
 let
     //&wsfunction=core_enrol_get_users_courses
 
-    RemoteData = AskMoodleFor("core_enrol_get_users_courses", "10335"),
+    RemoteData = AskMoodleFor("core_enrol_get_users_courses", "userid=10335"),
 
 
-    #"Renamed Columns" = Table.RenameColumns(
-        RemoteData, {
-            {"Column1", "courses"}
-        }
-    ),
-    #"Expanded courses" = Table.ExpandRecordColumn(
+    #"Renamed Columns" = Table.RenameColumns(RemoteData,{{"Column1", "Course"}}),
+    #"Expanded Course" = Table.ExpandRecordColumn(
         #"Renamed Columns",
-        "courses",
-        {"id", "fullname", "shortname", "timemodified", "assignments"},
-        {"id", "fullname", "shortname", "timemodified", "assignments"}
+        "Course",
+        {
+            "id",
+            "shortname",
+            "fullname",
+            "displayname",
+            "enrolledusercount",
+            "idnumber",
+            "visible",
+            "summary",
+            "summaryformat",
+            "format",
+            "showgrades",
+            "lang",
+            "enablecompletion",
+            "completionhascriteria",
+            "completionusertracked",
+            "category",
+            "progress",
+            "completed",
+            "startdate",
+            "enddate",
+            "marker",
+            "lastaccess",
+            "isfavourite",
+            "hidden",
+            "overviewfiles"
+        },
+        {
+            "Course.id",
+            "Course.shortname",
+            "Course.fullname",
+            "Course.displayname",
+            "Course.enrolledusercount",
+            "Course.idnumber",
+            "Course.visible",
+            "Course.summary",
+            "Course.summaryformat",
+            "Course.format",
+            "Course.showgrades",
+            "Course.lang",
+            "Course.enablecompletion",
+            "Course.completionhascriteria",
+            "Course.completionusertracked",
+            "Course.category",
+            "Course.progress",
+            "Course.completed",
+            "Course.startdate",
+            "Course.enddate",
+            "Course.marker",
+            "Course.lastaccess",
+            "Course.isfavourite",
+            "Course.hidden",
+            "Course.overviewfiles"
+        }
     )
-    // Courses = #"Expanded courses"[courses]
 in
-    // Courses
-    #"Expanded courses"
+    #"Expanded Course"
 
 
 // 2021-02-10: Could not get WS working with posting form dataq.
