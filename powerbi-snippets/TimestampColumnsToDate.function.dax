@@ -5,24 +5,38 @@
 // Added column names will have `_date` appended to them (e.g. `myTimestamp_date`).
 //
 // @param SourceTable {table}
-// @param colNames {list}
+// @param colNames {list} List with`{source, newName}`
 // @return {null} Adds `*_date` columns to `SourceTable`
 //
 // @since 2021-02-10
 
 
 // ConvertTimestampColumns =
-(SourceTable as table, colNames as list) =>
+(SourceTable as table, sourceColNames as list, newColNames as list) =>
     let newSource = List.Accumulate(
-        colNames,
+        sourceColNames,
         SourceTable,
-        (state, colName) =>
+        (thisColName, index) =>
+            // newColName = "",
+
+            // let newColName =
+
+            //     if List.Count(column) > 1 then
+            //         newColName = (column{1})
+            //     else
+            //         newColName = colName & "_date"
+            // in newColName
+            // ,
+            // if List.Count(columnList) > 1
+                // then columnList{3} = columnList{1}
+                // else columnList{3} = columnList{0} & "_date"
             Table.AddColumn(
-                state,
-                colName & "_date",
+                SourceTable,
+                newColNames{index},
                 // "you can use the underscore „_“ to reference the current row of the table, which means the current record."
-                each TimestampToDate(Record.Field(_, colName)),
-                type date
+                each
+                    TimestampToDate(Record.Field(_, sourceColNames{index})) as date
+
             )
     )
 in

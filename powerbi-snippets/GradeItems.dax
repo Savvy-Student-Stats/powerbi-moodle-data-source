@@ -12,13 +12,17 @@ let
     foo = TimestampColumnsToDate(
         #"Reordered Columns",
         {
-            "gradeitems.gradedatesubmitted",
-            "gradeitems.gradedategraded",
-            "gradeitems.gradehiddenbydate",
-            "gradeitems.timemodified"
+            {"gradeitems.gradedategraded"},
+            {"gradeitems.gradedatesubmitted"},
+            {"gradeitems.gradehiddenbydate"},
+            {"gradeitems.timemodified"}
+        },
+        {
+            {"dateGraded"},
+            {"dateGradeSubmitted"},
+            {"dateGradeHidden"},
+            {"dateModified"}
         }
-    ),
-    // Convert Moodle timestamps to date
-    #"gradeitems duedate_date" = foo{7}[gradeitems.duedate_date]
+    )
 in
-    #"gradeitems duedate_date"
+    foo
