@@ -1,0 +1,24 @@
+// GradeItems
+// @since 2021-02-11
+
+let
+    Source = Source_gradeitems,
+    #"Removed Other Columns" = Table.SelectColumns(Source,{"gradeitems.id", "gradeitems.itemname", "gradeitems.iteminstance", "gradeitems.categoryid", "gradeitems.outcomeid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.graderaw", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "courseid"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"gradeitems.itemname", "GradeItem.name"}}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns",{"GradeItem.name", "gradeitems.id", "gradeitems.iteminstance", "gradeitems.categoryid", "gradeitems.outcomeid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.graderaw", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "courseid"}),
+
+
+    // Convert Moodle timestamps to date
+    foo = TimestampColumnsToDate(
+        #"Reordered Columns",
+        {
+            "gradeitems.gradedatesubmitted",
+            "gradeitems.gradedategraded",
+            "gradeitems.gradehiddenbydate",
+            "gradeitems.timemodified"
+        }
+    ),
+    // Convert Moodle timestamps to date
+    #"gradeitems duedate_date" = foo{7}[gradeitems.duedate_date]
+in
+    #"gradeitems duedate_date"

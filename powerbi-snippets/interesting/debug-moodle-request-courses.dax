@@ -36,11 +36,19 @@ let
         // ]",
 
 
-        body = Json.Document("{
+        bodyJson = Json.Document("{
             ""wsfunction"": ""core_enrol_get_users_course"",
             ""wstoken"": """ & MOODLE_KEY & """,
             ""userid"": """ & MOODLE_USER_ID & """"
         & "}"),
+
+        body = [
+            wsfunction = "core_enrol_get_users_course",
+            wstoken = MOODLE_KEY,
+            userid = MOODLE_USER_ID
+        ],
+
+        bodyString = Json.Document(body),
 
         bodyQueryString = Uri.BuildQueryString(body),
         // body =
