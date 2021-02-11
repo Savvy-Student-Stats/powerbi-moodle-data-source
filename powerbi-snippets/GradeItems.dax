@@ -7,22 +7,51 @@ let
     #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"gradeitems.itemname", "GradeItem.name"}}),
     #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns",{"GradeItem.name", "gradeitems.id", "gradeitems.iteminstance", "gradeitems.categoryid", "gradeitems.outcomeid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.graderaw", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "courseid"}),
 
+    //
+
 
     // Convert Moodle timestamps to date
-    foo = TimestampColumnsToDate(
+    ResultTable = AddDateColumnsFromTimestamps(
         #"Reordered Columns",
+
         {
-            {"gradeitems.gradedategraded"},
-            {"gradeitems.gradedatesubmitted"},
-            {"gradeitems.gradehiddenbydate"},
-            {"gradeitems.timemodified"}
-        },
-        {
-            {"dateGraded"},
-            {"dateGradeSubmitted"},
-            {"dateGradeHidden"},
-            {"dateModified"}
+            "gradeitems.gradedategraded",
+            "gradeitems.gradedatesubmitted",
+            "gradeitems.gradehiddenbydate",
+            "gradeitems.timemodified"
         }
     )
 in
-    foo
+    ResultTable
+
+
+---
+
+let
+    Source = Source_gradeitems,
+    #"Removed Other Columns" = Table.SelectColumns(Source,{"gradeitems.id", "gradeitems.itemname", "gradeitems.iteminstance", "gradeitems.categoryid", "gradeitems.outcomeid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.graderaw", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "courseid"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"gradeitems.itemname", "GradeItem.name"}}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns",{"GradeItem.name", "gradeitems.id", "gradeitems.iteminstance", "gradeitems.categoryid", "gradeitems.outcomeid", "gradeitems.scaleid", "gradeitems.locked", "gradeitems.graderaw", "gradeitems.gradedatesubmitted", "gradeitems.gradedategraded", "gradeitems.gradehiddenbydate", "gradeitems.gradeneedsupdate", "gradeitems.gradeisoverridden", "gradeitems.gradeformatted", "gradeitems.feedback", "courseid"}),
+    #"Renamed Columns1" = Table.RenameColumns(#"Reordered Columns",{{"gradeitems.graderaw", "Grade.raw"}, {"gradeitems.gradedatesubmitted", "Grade.dateSubmitted"}, {"gradeitems.gradedategraded", "Grade.dateGraded"}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns1",{"gradeitems.gradehiddenbydate"}),
+    #"Renamed Columns2" = Table.RenameColumns(#"Removed Columns",{{"gradeitems.gradeneedsupdate", "Grade.needsUpdate"}}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Renamed Columns2",{"gradeitems.gradeisoverridden"}),
+    #"Renamed Columns3" = Table.RenameColumns(#"Removed Columns1",{{"gradeitems.gradeformatted", "Grade.formattedText"}, {"gradeitems.feedback", "Grade.feedbackHtml"}, {"courseid", "Grade.courseid"}})
+
+    //
+
+
+    // // Convert Moodle timestamps to date
+    // ResultTable = AddDateColumnsFromTimestamps(
+    //     #"Reordered Columns",
+
+    //     {
+    //         "gradeitems.gradedategraded",
+    //         "gradeitems.gradedatesubmitted",
+    //         "gradeitems.gradehiddenbydate",
+    //         "gradeitems.timemodified"
+    //     }
+    // )
+in
+    // ResultTable
+    #"Renamed Columns3"

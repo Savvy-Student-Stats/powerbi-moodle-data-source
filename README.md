@@ -44,9 +44,9 @@ It determines the future.
 
 
 
-![image-20210209142237794](README.assets/image-20210209142237794.png)
+![image-Moodle-Preferences](README.assets/image-Moodle-Preferences.png)
 
-![image-20210209143111955](README.assets/image-20210209143111955.png)
+![image-Moodle-Keys](README.assets/image-Moodle-Keys.png)
 
 
 

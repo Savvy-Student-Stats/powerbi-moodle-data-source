@@ -1,0 +1,30 @@
+// AddDateColumnsFromTimestamps (function)
+//
+// Convert a list of columns from timestamp (seconds since epoch),
+// to a date field.
+// Added column names will have `_date` appended to them (e.g. `myTimestamp_date`).
+//
+// @param SourceTable {table}
+// @param colNames {list}
+// @return {null} Adds `*_date` columns to `SourceTable`
+//
+// @since 2021-02-10
+
+
+// ConvertTimestampColumns =
+(SourceTable as table, colNames as list) =>
+    let newSource = List.Accumulate(
+        colNames,
+        SourceTable,
+        (state, colName) =>
+            Table.AddColumn(
+                state,
+                colName & "_date",
+                // "you can use the underscore „_“ to reference the current row of the table, which means the current record."
+                each
+                    if Record.Field(_, colName)) > 0 TimestampToDate(Record.Field(_, colName)),
+                type date
+            )
+    )
+in
+    newSource

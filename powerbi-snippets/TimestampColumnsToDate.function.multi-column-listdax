@@ -12,11 +12,11 @@
 
 
 // ConvertTimestampColumns =
-(SourceTable as table, sourceColNames as list, newColNames as list) =>
+(SourceTable as table, columnList as list) =>
     let newSource = List.Accumulate(
-        sourceColNames,
+        columnList,
         SourceTable,
-        (thisColName, index) =>
+        (SourceTable, columnList) =>
             // newColName = "",
 
             // let newColName =
@@ -27,15 +27,16 @@
             //         newColName = colName & "_date"
             // in newColName
             // ,
-            // if List.Count(columnList) > 1
-                // then columnList{3} = columnList{1}
-                // else columnList{3} = columnList{0} & "_date"
+            if List.Count(columnList) > 1
+                then columnList{3} = columnList{1}
+                else columnList{3} = columnList{0} & "_date"
+            ,
             Table.AddColumn(
                 SourceTable,
-                newColNames{index},
+                columnList,
                 // "you can use the underscore „_“ to reference the current row of the table, which means the current record."
                 each
-                    TimestampToDate(Record.Field(_, sourceColNames{index})) as date
+                    TimestampToDate(Record.Field(_, columnList{0})) as date
 
             )
     )

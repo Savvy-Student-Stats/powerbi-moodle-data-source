@@ -14,14 +14,21 @@
 // TimestampToDate =
 (timestamp as number) =>
         let
-        DEFAULT_DATE = DateTime.Date(2019, 1, 1),
-        EPOCH = #datetime(1970, 1, 1, 0, 0, 0),
+        // DEFAULT_DATE = DateTime.Date(2019, 1, 1),
+        // EPOCH_DATE = #datetime(1970, 1, 1, 0, 0, 0),
 
-        returnValue = if timestamp = 0
-            then DEFAULT_DATE
-            else
+        returnValue =
+        if timestamp = null
+        then DEFAULT_DATE
+        else
+            try
                 DateTime.Date(
-                    EPOCH + #duration(0, 0, 0, timestamp)
+                    EPOCH_DATE + #duration(0, 0, 0, timestamp)
                 )
+            otherwise
+                null
 in
     returnValue
+
+
+// http://excel-inside.pro/blog/2018/05/17/comparing-null-values-in-power-query/
