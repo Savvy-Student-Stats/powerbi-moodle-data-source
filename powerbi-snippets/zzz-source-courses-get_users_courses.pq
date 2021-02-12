@@ -1,17 +1,26 @@
 let
     // zzz-source-get_users_courses
-    // The `Courses` table (query?) then references this and expands as needed.
-    //
-    // @since 2021-02-10
+    // load response from web service.
+    // The `Assignment` table then references this and expands as needed.
 
-    RemoteDataTable = AskMoodleForTable(
-        "core_enrol_get_users_courses",
-        "userid=" & MOODLE_USER_ID
+    //
+    // @since 2021-
+
+    RemoteDataTable = AskMoodleForTable("core_enrol_get_users_courses", "userid=" & MOODLE_USER_ID),
+    #"Renamed Columns" = Table.RenameColumns(
+        RemoteDataTable,
+        {
+            {
+                "Column1",
+                "Courses"
+            }
+        }
     ),
 
     #"Expanded Courses" = Table.ExpandRecordColumn(
-            RemoteDataTable,
-            "Column1",
+
+            #"Renamed Columns",
+            "Courses",
             {
                 "id",
                 "displayname",
@@ -34,12 +43,12 @@ let
             {
                 "C.id",
                 "C.name",
-                "C.lastAccess_timestamp",
+                "C.lastaccess",
                 "C.progress",
-                "C.isFavourite",
-                "C.isCompleted",
-                "C.startDate_timestamp",
-                "C.endDate_timestamp",
+                "C.isfavourite",
+                "C.completed",
+                "C.startdate",
+                "C.enddate",
                 "C.summary",
                 "C.category",
                 "C.format",
@@ -49,17 +58,6 @@ let
                 "C.marker",
                 "C.overviewfiles"
             }
-    ),
-    // Convert Timestams
-    #"Converted timestamps to date" = AddDateColumnsFromTimestamps(
-        #"Expanded Courses",
-
-        {
-            "C.lastAccess_timestamp",
-            "C.startDate_timestamp",
-            "C.endDate_timestamp"
-            // "C.endDate_timestamp",
-        }
     )
 in
-    #"Converted timestamps to date"
+    #"Expanded Courses"

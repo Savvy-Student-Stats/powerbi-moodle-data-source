@@ -1,0 +1,32 @@
+let
+    //&wsfunction=core_enrol_get_users_courses
+
+    RemoteData = AskMoodleFor(
+        "core_enrol_get_users_courses",
+        "userid=" & MOODLE_USER_ID
+    ),
+
+    RemoteDataTable = Table.FromList(
+        RemoteData,
+        Splitter.SplitByNothing(),
+        null,
+        null,
+        ExtraValues.Error
+    ),
+
+    #"Renamed Columns" = Table.RenameColumns(RemoteDataTable,{{"Column1", "C"}}),
+    #"Expanded C" = Table.ExpandRecordColumn(#"Renamed Columns", "C", {"id", "displayname", "summary", "format", "enablecompletion", "completionhascriteria", "completionusertracked", "category", "progress", "completed", "startdate", "enddate", "marker", "lastaccess", "isfavourite", "overviewfiles"}, {"C.id", "C.displayname", "C.summary", "C.format", "C.enablecompletion", "C.completionhascriteria", "C.completionusertracked", "C.category", "C.progress", "C.completed", "C.startdate", "C.enddate", "C.marker", "C.lastaccess", "C.isfavourite", "C.overviewfiles"})
+
+    ,
+
+    #"Expanded C.overviewfiles" = Table.ExpandListColumn(#"Expanded C", "C.overviewfiles"),
+    #"Expanded C1" = Table.ExpandRecordColumn(
+        #"Renamed Columns1",
+        "C.overviewfiles",
+        { "fileurl" },
+        { "C.imageUrl" }
+        // { "filename", "filepath", "filesize", "fileurl", "timemodified", "mimetype" }
+        // {"C.filename", "C.filepath", "C.filesize", "C.fileurl", "C.timemodified", "C.mimetype"}
+    )
+in
+    #"Expanded C1"
