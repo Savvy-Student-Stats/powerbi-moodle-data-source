@@ -138,6 +138,15 @@ There were numerous benefis to online scool, including:
 
 TODO: Finish
 
+
+---
+Installation
+Usage
+Contributing
+Credits
+License
+
+
 ---
 
 *Made with :heart: by [sqrl (Dad)](https://twitter.com/gregdevelops) and [Bobthebe3t (Child/Student)](http://www.bobisagamer.com/)*.

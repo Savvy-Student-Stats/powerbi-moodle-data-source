@@ -8,5 +8,22 @@
 4. `categories_something` *(optional)*
 
 
+# Gotchas
+## Courses and Grades Responses Differ
+I tried abstracting `AskMoodleFor` to a single place.
+I abstracted a bit too far.
 
+The function is used by both `AskMoodleForCourses`
+and `AskMoodleForGradebooks`.
+
+After the call:
+
+* `AskMoodleForCourses` / `core_enrol_get_users_courses`
+  * Returns a `"List"`.
+* `AskMoodleForGradebooks` / `gradereport_user_get_grade_items`
+  * Returns:
+    * `usergrades` as list
+    * `warnings` as list
+
+So the conversion just needs to happen in the source models.
 
