@@ -21,36 +21,43 @@
 // END
 
 // Source = Json.Document(File.Contents(CONF_MOODLE_DIR & "01-courses-core_enrol_get_users_courses.json")),
-(wsfunction as text, optional extraUrlParams as text) as table =>
+(wsfunction as text, optional extraParams as text) =>
     let
 
+        fullServiceUrlBase =
+                            MOODLE_SVC_URL
+                            & "&wsfunction=" & wsfunction
+                            & "&wstoken=" & MOODLE_KEY,
 
-        finalUrl = MOODLE_SVC_URL
-                & "&wsfunction=" & wsfunction
-                & "&wstoken=" & MOODLE_KEY
-                & "&" & extraUrlParams
+        fullServiceUrl =
+            if (extraParams <> null) then
+                fullServiceUrlBase & "&" & extraParams
+            else
+                fullServiceUrlBase
         ,
 
         // Make Request to Moodle Web Service
-        WebsvcResponse = Web.Contents(finalUrl),
+        WebsvcResponse = Web.Contents(fullServiceUrl),
 
         // Convert Moodle's JSON Response
         // https://docs.microsoft.com/en-us/powerquery-m/json-document
-        Source = Json.Document(WebsvcResponse),
+        Source = Json.Document(WebsvcResponse)
 
-        // Convert List to Table by applying the optional
-        // splitting function, splitter, to each item in the list.
-        // https://docs.microsoft.com/en-us/powerquery-m/table-fromlist
-        finalTable = Table.FromList(
-            Source,
-            Splitter.SplitByNothing(),
-            null,
-            null,
-            ExtraValues.Error
-        )
 
+        // ,
+
+        // // Convert List to Table by applying the optional
+        // // splitting function, splitter, to each item in the list.
+        // // https://docs.microsoft.com/en-us/powerquery-m/table-fromlist
+        // finalTable = Table.FromList(
+        //     Source,
+        //     Splitter.SplitByNothing(),
+        //     null,
+        //     null,
+        //     ExtraValues.Error
+        // )
 in
-    finalTable
+    Source
 
 // ///~///~///
 // # Note
