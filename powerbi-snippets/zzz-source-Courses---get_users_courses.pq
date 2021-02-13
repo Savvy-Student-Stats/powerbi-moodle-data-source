@@ -1,5 +1,5 @@
 let
-    // zzz-source-get_users_courses
+    // zzz-source-Courses
     // load response from web service.
     // The `Assignment` table then references this and expands as needed.
 
