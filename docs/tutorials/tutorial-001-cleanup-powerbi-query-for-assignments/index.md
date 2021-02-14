@@ -81,7 +81,49 @@ See git commit `a9f590e35cc6e1f3634d105ea03ff5e87da2886e`.
 
 See git commit `34e997b38bfcb0df46b5fa44a8fbc0d6c317d9e0`
 > 34e997b - refactor(assignments): Improve default Power BI code for tutorial-001 (v2)
-See git commit `c0c6461f2d534df38ae6d58eb4fce52347e40fb3`.
+
+## v3: Cleaned up a bit more
+```m
+01: let
+02:     //
+03:     // zzz-source-assignments
+04:     // Request Assignments from Moodle using `mod_assign_get_assignments`.
+05:     //
+06:     // @since  2021-02-12
+07:     // @author code@sqrl.ca
+08:     //
+09: 
+10:     Source = AskMoodleFor("mod_assign_get_assignments"),
+11: 
+12:     // WARNING:
+13:     // Just grab the `courses` property.
+14:     // Ignore the `warnings` property the web service returns for `Assignments` and `Courses`.
+15:     // Is it just Grades that doesn't return the warnings property?
+16:     // TODO: Find out if the `warnings` property is only returned when there are warnings.
+17:     //       Does that mean the responses could change?
+18:     //       That would be weird, unusual to break the response contract like that.
+19:     //       No way would it do that...but stil...just double check in `Postman`.
+20:     //
+21:     CoursesList = Source[courses],
+22: 
+23:     #"Converted to Table" = Table.FromList(
+24:         CoursesList,
+25:         Splitter.SplitByNothing(),
+26:         null,
+27:         null,
+28:         ExtraValues.Error
+29:     ),
+30:     #"Renamed Columns" = Table.RenameColumns(
+31:         #"Converted to Table",{{"Column1", "A"}}
+32:     ),
+33:     #"Expanded A" = Table.ExpandRecordColumn(
+34:         #"Renamed Columns", "A", {"id", "shortname", "fullname", "displayname", "enrolledusercount", "idnumber", "visible", "summary", "summaryformat", "format", "showgrades", "lang", "enablecompletion", "completionhascriteria", "completionusertracked", "category", "progress", "completed", "startdate", "enddate", "marker", "lastaccess", "isfavourite", "hidden", "overviewfiles"}, {"A.id", "A.shortname", "A.fullname", "A.displayname", "A.enrolledusercount", "A.idnumber", "A.visible", "A.summary", "A.summaryformat", "A.format", "A.showgrades", "A.lang", "A.enablecompletion", "A.completionhascriteria", "A.completionusertracked", "A.category", "A.progress", "A.completed", "A.startdate", "A.enddate", "A.marker", "A.lastaccess", "A.isfavourite", "A.hidden", "A.overviewfiles"}
+35:     )
+36: in
+37:     #"Expanded A"
+38: 
+```
+
 
 ----
 /end/done/goodbye/
