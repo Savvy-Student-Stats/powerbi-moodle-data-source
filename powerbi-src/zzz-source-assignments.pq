@@ -35,5 +35,3 @@ let
     )
 in
     #"Expanded A"
-
-
