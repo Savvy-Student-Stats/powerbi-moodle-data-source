@@ -566,7 +566,7 @@ in
 // debug AskMoodleForAssignments
 let
     Source = AskMoodleFor("mod_assign_get_assignments")
-    // , "userid=10335&courseid=702")
+    // , "userid=12345&courseid=702")
 in
     Source
 
