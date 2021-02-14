@@ -25,6 +25,8 @@ To view in Power BI:
 The source `"Power Query / M"`, ~~which I'll refer to as "Power Query"~~,  
 is in the file [`powerbi-src/zzz-source-assignments.pq`](../../../powerbi-src/zzz-source-assignments.pq).
 
+----
+
 ### `v1`: Power Query Editor (default)
 
 This is what `Power BI` generates when you go through the `Power Query Editor`.
@@ -42,6 +44,8 @@ We can, and will, do much better.
 ```
 
 See git commit `a9f590e35cc6e1f3634d105ea03ff5e87da2886e`.
+
+----
 
 ### `v2`: Cleaned Up a Bit, Added JSDoc Style Comments
 
@@ -80,7 +84,10 @@ See git commit `a9f590e35cc6e1f3634d105ea03ff5e87da2886e`.
 ```
 
 See git commit `34e997b38bfcb0df46b5fa44a8fbc0d6c317d9e0`
+
 > 34e997b - refactor(assignments): Improve default Power BI code for tutorial-001 (v2)
+
+----
 
 ## v3: Cleaned up a bit more
 ```m
@@ -123,6 +130,10 @@ See git commit `34e997b38bfcb0df46b5fa44a8fbc0d6c317d9e0`
 37:     #"Expanded A"
 38: 
 ```
+
+See git commit `c251c3fe3d18fdf2c96b9175ac324b0081a39bb4`
+
+> c251c3f - refactor(assignments): Improve default Power BI code for tutorial-001 (v3) 
 
 
 ----
