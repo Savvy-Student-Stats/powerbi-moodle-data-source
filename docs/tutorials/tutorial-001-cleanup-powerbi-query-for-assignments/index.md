@@ -1,14 +1,13 @@
-# Tips for Coding
+# Formatting Power BI's Generated Code
 
-I will forget how I did certain things. These things help me, and will probably help you too. :thumbsup: :nerd_face: :apple: :school:
+This started off as a part of `tips-for-coding.md`  
+as `Tip-001: Formatting Power BI's Lists`. 
 
-# Contents
+It quickly grew.
 
-[TOC]
+There is this document, and associated git branches to go with it.
 
-------
-
-
+----
 
 ## Tip-001: Formatting Power BI's Lists
 
@@ -23,12 +22,13 @@ To view in Power BI:
 
 1. Open the report (`[school-stats-moodle.pbix](school-stats-moodle.pbix)`).
 
-The source `"Power Query / M"`, ~~which I'll refer to as "Power Query"~~, is in the file
-`[powerbi-snippets/zzz-source-assignments.pq](powerbi-snippets/zzz-source-assignments.pq)`).
+The source `"Power Query / M"`, ~~which I'll refer to as "Power Query"~~,  
+is in the file [`powerbi-src/zzz-source-assignments.pq`](../../../powerbi-src/zzz-source-assignments.pq).
 
 ### `v1`: Power Query Editor (default)
 
 This is what `Power BI` generates when you go through the `Power Query Editor`.
+We can, and will, do much better.
 
 ```m
 1: let
@@ -39,53 +39,5 @@ This is what `Power BI` generates when you go through the `Power Query Editor`.
 6:     #"Expanded A" = Table.ExpandRecordColumn(#"Renamed Columns", "A", {"id", "shortname", "fullname", "displayname", "enrolledusercount", "idnumber", "visible", "summary", "summaryformat", "format", "showgrades", "lang", "enablecompletion", "completionhascriteria", "completionusertracked", "category", "progress", "completed", "startdate", "enddate", "marker", "lastaccess", "isfavourite", "hidden", "overviewfiles"}, {"A.id", "A.shortname", "A.fullname", "A.displayname", "A.enrolledusercount", "A.idnumber", "A.visible", "A.summary", "A.summaryformat", "A.format", "A.showgrades", "A.lang", "A.enablecompletion", "A.completionhascriteria", "A.completionusertracked", "A.category", "A.progress", "A.completed", "A.startdate", "A.enddate", "A.marker", "A.lastaccess", "A.isfavourite", "A.hidden", "A.overviewfiles"})
 7: in
 8:     #"Expanded A"
-
 ```
 
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
-
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
-
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
-
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
-
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
-
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
-
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
-
-### `v2`: Cleaned Up a Bit
-
-```m
-
-```
