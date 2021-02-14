@@ -79,6 +79,8 @@ See git commit `a9f590e35cc6e1f3634d105ea03ff5e87da2886e`.
 31: 
 ```
 
+See git commit `34e997b38bfcb0df46b5fa44a8fbc0d6c317d9e0`
+> 34e997b - refactor(assignments): Improve default Power BI code for tutorial-001 (v2)
 See git commit `c0c6461f2d534df38ae6d58eb4fce52347e40fb3`.
 
 ----
