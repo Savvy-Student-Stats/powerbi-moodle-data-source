@@ -1,4 +1,9 @@
-# Awesome School Stats :sunglasses: (`school-stats-powerbi`)
+# ~~Awesome School~~ Savvy Student Stats :sunglasses: (`school-stats-powerbi`)
+
+## UPDATE 2022-06-02
+- Quickly Edited Name as this may get some traffic thanks to new CSV Importer/Transformer (Power Query ETL)
+github.com/trxn8r/trxn8r
+- Surprised this was 18 months ago, seems like both a longer and shorter time.
 
 <details>
 <summary>Contents</summary>
