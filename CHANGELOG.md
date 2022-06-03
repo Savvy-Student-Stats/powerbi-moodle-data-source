@@ -15,6 +15,13 @@ Trying `ember` and other templates. Whatever suits my needs, tickles my fancy.Th
 
 ## [Released]
 
+## 2022-06-02 - v0.14.2 (?) - Cleanup in case of traffic coming from `TRXN8R`
+- `TRXN8R | Excel Power Query Bulk CSV Financial Transactions Importer`
+- https://github.com/trxn8r/trxn8r
+- Quickly Edited Name as this may get some traffic thanks to new CSV Importer/Transformer (Power Query ETL)
+github.com/trxn8r/trxn8r
+- Surprised this was 18 months ago, seems like both a longer and shorter time.
+
 ### 2021-02-14 - v0.14 - Power BI Report Works with Courses, Grades, and Assignments!
 Skipping 0.13 b/c lots of changes and 13 is said to be unlucky.
 
